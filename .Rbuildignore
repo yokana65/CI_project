@@ -1,1 +1,11 @@
+^renv$
+^renv\.lock$
+<<<<<<< HEAD
 ^LICENSE\.md$
+=======
+^dev$
+^\.here$
+^LICENSE\.md$
+^README\.Rmd$
+^CODE_OF_CONDUCT\.md$
+>>>>>>> 33549810e331392005d3212ad4e7d1480de02174

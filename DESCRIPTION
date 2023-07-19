@@ -1,0 +1,33 @@
+Package: CI.project
+Title: Housing Data For Luxembourg
+Version: 0.1
+Authors@R: 
+    person("Bruno", "Rodrigues", , "bruno@brodrigues.co", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-3211-3689"))
+Description: This package contains functions to get, clean and analyse
+    housing price data for Luxembourg.
+License: GPL (>= 3)
+Depends: 
+    R (>= 2.10)
+Imports: 
+    dplyr,
+    ggplot2,
+    janitor,
+    purrr,
+    readxl,
+    rlang,
+    rvest,
+    stringr,
+    tidyr,
+    utils
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: 
+    knitr
+Config/fusen/version: 0.5.1
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
