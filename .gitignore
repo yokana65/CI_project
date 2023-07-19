@@ -1,1 +1,6 @@
-renv/
+.Rproj.user
+.Rhistory
+.RData
+.DS_Store
+.httr-oauth
+inst/doc

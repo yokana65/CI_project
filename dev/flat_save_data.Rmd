@@ -24,7 +24,7 @@ library(purrr)
 library(readxl)
 library(rvest)
 library(stringr)
-library(housing)
+library(CI.project)
 ```
 
 ## Downloading the data

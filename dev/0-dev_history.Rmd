@@ -57,13 +57,13 @@ usethis::use_news_md()
 
 # Inflate save_data.Rmd
 
-Start by inflating `dev/save_data.Rmd`:
+Start by inflating `dev/flat_save_data.Rmd`:
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(flat_file = "dev/flat_save_data.Rmd",
-               vignette_name = "dev-save_data",
+               vignette_name = "dev-flat_save_data",
                overwrite = T)
 
 ```
@@ -95,7 +95,7 @@ it possible to turn this operation pure:
 
 ```{r}
 local({
-  knitr::knit("vignettes/dev-save_data.Rmd", output = tempfile())
+  knitr::knit("vignettes/dev-flat_save_data.Rmd", output = tempfile())
   usethis::use_data(commune_level_data, overwrite = TRUE)
   usethis::use_data(country_level_data, overwrite = TRUE)
   usethis::use_data(communes, overwrite = TRUE)
