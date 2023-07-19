@@ -1,0 +1,14 @@
+base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
+dplyr
+ggplot2
+janitor
+purrr
+readxl
+rvest
+stringr
