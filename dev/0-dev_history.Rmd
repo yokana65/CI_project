@@ -1,0 +1,179 @@
+---
+title: "Development actions history"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+All commands that you use to use when developing packages...
+
+# First time just after creating the project
+
+- Fill the following chunk to create the DESCRIPTION of your package
+
+```{r description, eval=FALSE}
+# Describe your package
+fusen::fill_description(
+  pkg = here::here(),
+  fields = list(
+    Title = "Housing Data For Luxembourg",
+    Version = "0.1",
+    Description = "This package contains functions to get, clean and analyse housing price data for Luxembourg.",
+    `Authors@R` = c(
+      person("Bruno", "Rodrigues", email = "bruno@brodrigues.co", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3211-3689"))
+    )
+  )
+, overwrite = TRUE)
+# Define License with use_*_license()
+usethis::use_gpl3_license()
+```
+
+# Start using git
+
+Not required, since we are already on a repository.
+
+```{r, eval=FALSE}
+#usethis::use_git()
+# Deal with classical files to ignore
+#usethis::git_vaccinate()
+# Use main for primary branch
+#usethis::git_default_branch_rename()
+```
+
+# Set extra sources of documentation
+
+```{r, eval=FALSE}
+# Install a first time
+remotes::install_local()
+# README
+usethis::use_readme_rmd()
+# Code of Conduct
+usethis::use_code_of_conduct("contact@fake.com")
+# NEWS
+usethis::use_news_md()
+```
+
+**From now, you will need to "inflate" your package at least once to be able to use the following commands. Let's go to your flat template, and come back here later if/when needed.**
+
+# Inflate save_data.Rmd
+
+Start by inflating `dev/save_data.Rmd`:
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_save_data.Rmd",
+               vignette_name = "dev-save_data",
+               overwrite = T)
+
+```
+
+
+This will put everything in the right place to get started. We then continue by
+adding the datasets.
+
+# Including datasets
+
+The datasets created in the `save_data.Rmd` have still to be saved into the
+`data/` folder of the package. This will make the datasets available using
+`data("commune_level_data")`. But the package has to be inflated once at least
+before being able to save the data and document it. We are going to knit the
+vignette generated from `save_data.Rmd` for this. This vignette contains all the
+calls needed to save the data. Then, we are going to use `usethis::use_data()`
+to save the datasets. We knit the vignette into a temporary file using `tempfile()`
+because we’re not interested in the output itself, but simply want the datasets
+to be generated. When using `knitr::knit()`, every object that is created in the 
+knitted vignette would be made available in the global environment. In this case,
+knitting the vinette would make `commune_level_data`, `country_level_data` and
+`communes` available in the global environment, which in turn would make it possible
+to save using `usethis::use_data(commune_level_data)`. But we don’t want to clutter
+the global environment with these datasets, we only want to save them.
+
+So to avoid cluttering the global environment, we run the calls inside `local()`.
+`local()` runs code in a temporary environment which is then discarded. This makes
+it possible to turn this operation pure:
+
+```{r}
+local({
+  knitr::knit("vignettes/dev-save_data.Rmd", output = tempfile())
+  usethis::use_data(commune_level_data, overwrite = TRUE)
+  usethis::use_data(country_level_data, overwrite = TRUE)
+  usethis::use_data(communes, overwrite = TRUE)
+})
+
+```
+
+The first call, to `knitr::knit()` knits the vignette, and makes the datasets
+available to the local environment. Inside this local environment it is now possible
+to call `usethis::use_data()` to save each data set in turn. The datasets are
+now save inside the `data/` folder of the package, and are thus available to users
+of the package using `data("dataset_name")`.
+
+We still need to document the datasets. For this, we are going to inflate
+another `.Rmd` file. Take a look at `dev/data_doc.Rmd`. This vignette documents the
+data sets when we inflate it. Since this vignette is only useful for documenting the 
+datasets, we don’t want to include it as a vignette in the package, so we set its name
+to `NA`.
+
+```{r}
+fusen::inflate(flat_file = "dev/data_doc.Rmd",
+               vignette_name = NA,
+               overwrite = T)
+```
+
+
+# Package development tools
+## Use once
+
+Only use the commands that you need. You can safely delete those that you never run.
+
+```{r, eval=FALSE}
+# Pipe
+usethis::use_pipe()
+
+# package-level documentation
+usethis::use_package_doc()
+
+# GitHub
+# Add your credentials for GitHub
+gitcreds::gitcreds_set()
+# Send your project to a new GitHub project
+usethis::use_github()
+
+# Set Continuous Integration
+# _GitHub
+usethis::use_github_action_check_standard()
+usethis::use_github_action("pkgdown")
+usethis::use_github_action("test-coverage")
+# _GitLab
+gitlabr::use_gitlab_ci(type = "check-coverage-pkgdown")
+
+# Add new flat template
+fusen::add_flat_template("add")
+```
+
+## Use everytime needed
+
+```{r}
+# Simulate package installation
+pkgload::load_all()
+
+# Generate documentation and deal with dependencies
+attachment::att_amend_desc()
+
+# Check the package
+devtools::check()
+```
+
+
+# Share the package
+
+```{r}
+# set and try pkgdown documentation website
+usethis::use_pkgdown()
+pkgdown::build_site()
+
+# build the tar.gz with vignettes to share with others
+devtools::build(vignettes = TRUE)
+```
+
